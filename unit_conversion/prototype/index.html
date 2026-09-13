@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!-- 이 빙구야, 이걸 또 열어봤느냐!-->
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>메르헨 단위계 변환기</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="app">
+
+    <header class="app-header">
+      <div class="app-title">
+        <h1>메르헨 단위계 변환기</h1>
+        <p class="subtitle">
+          기존 단위를 <b>mt</b> · <b>dt</b> · <b>dtt</b> · <b>tht</b> 로 변환합니다
+        </p>
+      </div>
+      <label class="precision-field">
+        <span class="precision-label">소수점</span>
+        <select id="decimals" aria-label="소수점 자리수"></select>
+      </label>
+    </header>
+
+    <nav id="tabs" class="tabs" role="tablist" aria-label="변환 차원"></nav>
+
+    <section class="converter">
+
+      <div class="card input-card">
+        <label class="card-label" for="value-input">입력</label>
+        <div id="input-field" class="input-field">
+          <input id="value-input"
+                 type="text"
+                 inputmode="decimal"
+                 autocomplete="off"
+                 spellcheck="false"
+                 placeholder="값 입력"
+                 aria-describedby="input-error">
+          <select id="from-unit" aria-label="입력 단위"></select>
+        </div>
+        <p id="input-error" class="input-error" role="alert"></p>
+      </div>
+
+      <div class="arrow" aria-hidden="true">
+        <span class="arrow-desktop">▶</span>
+        <span class="arrow-mobile">▼</span>
+      </div>
+
+      <div class="card result-card">
+        <span class="card-label">결과</span>
+        <div class="result-main" role="status" aria-live="polite" aria-atomic="true">
+          <span id="result-value" class="result-value is-empty">—</span>
+          <span id="result-symbol" class="result-symbol">mt</span>
+        </div>
+        <div class="result-foot">
+          <span id="result-reading" class="result-reading">메따</span>
+          <button id="copy-btn" type="button" class="copy-btn" disabled>복사</button>
+        </div>
+      </div>
+
+    </section>
+
+    <p id="equation" class="equation"></p>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>입력 단위별 한눈에 보기</h2>
+        <span class="panel-badge">→ <span id="glance-unit">mt</span></span>
+      </div>
+      <p id="glance-caption" class="panel-caption"></p>
+      <table class="glance">
+        <tbody id="glance-body"></tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>메르헨 단위 안내</h2>
+      </div>
+      <table class="guide">
+        <tbody id="guide-body"></tbody>
+      </table>
+      <p class="panel-note">
+        기호는 항상 소문자로 쓰고, 값과 기호 사이는 한 칸 띄웁니다 (예: <code>3 mt</code>).
+        <br>
+        <b>dt</b>와 <b>dtt</b>는 <b>mt</b>에서 유도된 단위이지만, 길이·넓이·부피는 서로 변환되지 않습니다.
+      </p>
+    </section>
+
+    <footer class="app-footer">
+      메르헨 단위계 변환기 · 프로토타입 v1 — 기존 단위 → 메르헨 단위 단방향 변환
+    </footer>
+
+  </div>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script src="js/units.js"></script>
+  <script src="js/convert.js"></script>
+  <script src="js/format.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>

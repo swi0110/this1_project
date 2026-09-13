@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<!-- 이 빙구야, 이걸 또 열어봤느냐!-->
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>메르헨 단위계 변환기</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="crest-band">
+
+    <div id="lang-toggle" class="lang-toggle" role="group" data-i18n-aria="langGroup"></div>
+
+    <div class="crest-band-inner">
+
+      <svg class="crest" viewBox="0 0 64 46" aria-hidden="true" focusable="false">
+        <path class="crest-crown"
+              d="M5 34 L9 13 L20 24 L32 6 L44 24 L55 13 L59 34 Z"/>
+        <rect class="crest-base" x="4" y="34" width="56" height="7" rx="1.5"/>
+        <circle class="crest-jewel" cx="9"  cy="10" r="3"/>
+        <circle class="crest-jewel" cx="32" cy="3.5" r="3.5"/>
+        <circle class="crest-jewel" cx="55" cy="10" r="3"/>
+      </svg>
+
+      <h1 class="wordmark" data-i18n="wordmark">메르헨 단위계 변환기</h1>
+      <p class="wordmark-sub" data-i18n="wordmarkSub" data-i18n-lang="wordmarkSubLang">Märchen Unit Converter</p>
+
+      <div class="band-rule" aria-hidden="true"><span>✦</span></div>
+    </div>
+  </header>
+
+  <main class="app">
+
+    <div id="tabs" class="tabs" role="group" data-i18n-aria="dimGroup"></div>
+
+    <section class="converter">
+
+      <div class="card">
+        <label class="card-label" for="value-input" data-i18n="inputLabel">입력</label>
+        <div id="input-field" class="input-field">
+          <input id="value-input"
+                 type="text"
+                 inputmode="decimal"
+                 autocomplete="off"
+                 spellcheck="false"
+                 data-i18n-placeholder="inputPlaceholder"
+                 aria-describedby="input-error">
+          <select id="from-unit" data-i18n-aria="fromUnitAria"></select>
+        </div>
+        <p id="input-error" class="input-error" role="alert"></p>
+      </div>
+
+      <div class="arrow" aria-hidden="true">
+        <span class="arrow-desktop">▶</span>
+        <span class="arrow-mobile">▼</span>
+      </div>
+
+      <div class="card result-card">
+        <div class="result-head">
+          <span class="card-label" data-i18n="resultLabel">결과</span>
+          <label class="precision-field">
+            <span data-i18n="decimalsLabel">소수점</span>
+            <select id="decimals" data-i18n-aria="decimalsAria"></select>
+          </label>
+        </div>
+        <div class="result-main" role="status" aria-live="polite" aria-atomic="true">
+          <span id="result-value" class="result-value is-empty">—</span>
+          <span id="result-symbol" class="result-symbol">mt</span>
+        </div>
+        <div class="result-foot">
+          <span id="result-reading" class="result-reading">메따</span>
+          <button id="copy-btn" type="button" class="copy-btn" data-i18n="copy" disabled>복사</button>
+        </div>
+        <div id="system-toggle" class="system-toggle" role="group" data-i18n-aria="systemGroup"></div>
+      </div>
+
+    </section>
+
+    <p id="equation" class="equation"></p>
+
+    <section class="panel">
+      <div class="section-head">
+        <h2 data-i18n="glanceHeading">입력 단위별 한눈에 보기</h2>
+        <span class="panel-badge">→ <span id="glance-unit">mt</span></span>
+      </div>
+      <p id="glance-caption" class="panel-caption"></p>
+      <table class="glance">
+        <tbody id="glance-body"></tbody>
+      </table>
+    </section>
+
+    <section class="panel panel-guide">
+      <div class="section-head">
+        <h2 data-i18n="guideHeading">메르헨 단위 안내</h2>
+      </div>
+      <table class="guide">
+        <tbody id="guide-body"></tbody>
+      </table>
+      <p class="panel-note">
+        <span data-i18n-html="guideNote1"></span>
+        <br>
+        <span data-i18n-html="guideNote2"></span>
+      </p>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <div class="band-rule footer-rule" aria-hidden="true"><span>✦</span></div>
+
+    <nav class="links" data-i18n-aria="linksGroup">
+
+      <a class="link-btn" href="https://x.com/Mytyl_Maerchen"
+         target="_blank" rel="noopener noreferrer"
+         data-i18n-title="linkX" data-i18n-aria="linkXAria">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M17.53 3h3.2l-6.99 7.99L22 21h-6.44l-5.05-6.6L4.74 21H1.54l7.48-8.55L2 3h6.6l4.56 6.03L17.53 3Zm-1.12 16.1h1.77L7.67 4.81H5.77l10.64 14.29Z"/>
+        </svg>
+      </a>
+
+      <a class="link-btn" href="https://www.youtube.com/@MytylMaerchen"
+         target="_blank" rel="noopener noreferrer"
+         data-i18n-title="linkYoutube" data-i18n-aria="linkYoutubeAria">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.56 12 3.56 12 3.56s-7.5 0-9.39.52A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.11 2.12c1.89.52 9.39.52 9.39.52s7.5 0 9.39-.52A3 3 0 0 0 23.5 17.8c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z"/>
+        </svg>
+      </a>
+
+      <!-- 치지직 로고는 '치'·'직'을 번개 모양으로 변형한 것이라 번개를 모티프로 삼았다 -->
+      <a class="link-btn" href="https://chzzk.naver.com/390efc6c5186f85427b2d61297a9d4ed"
+         target="_blank" rel="noopener noreferrer"
+         data-i18n-title="linkChzzk" data-i18n-aria="linkChzzkAria">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M14.2 1.5 4.6 13.4a.55.55 0 0 0 .43.9h4.63l-1.06 7.5a.55.55 0 0 0 .97.42l9.83-12.02a.55.55 0 0 0-.43-.9h-4.7l1.02-7.4a.55.55 0 0 0-1.09-.4Z"/>
+        </svg>
+      </a>
+
+      <!-- 마플샵은 워드마크만 쓰고 심볼이 없어, 굿즈를 뜻하는 쇼핑백으로 대신한다 -->
+      <a class="link-btn" href="https://marpple.shop/kr/mytyl_maerchen"
+         target="_blank" rel="noopener noreferrer"
+         data-i18n-title="linkGoods" data-i18n-aria="linkGoodsAria">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M4.9 7h14.2c.5 0 .89.43.85.93l-1.06 12.4A1.7 1.7 0 0 1 17.2 21.9H6.8a1.7 1.7 0 0 1-1.69-1.57L4.05 7.93A.85.85 0 0 1 4.9 7Z"/>
+          <path d="M8.6 8.5V6.4a3.4 3.4 0 0 1 6.8 0v2.1" fill="none"
+                stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+        </svg>
+      </a>
+
+      <!-- 카페 앱 아이콘 대신 네이버의 N 마크 — 커피잔은 커뮤니티라는 성격을 오해하게 만든다 -->
+      <a class="link-btn" href="https://cafe.naver.com/maerchenkingdom"
+         target="_blank" rel="noopener noreferrer"
+         data-i18n-title="linkCafe" data-i18n-aria="linkCafeAria">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M4 4h5.2l5.6 8.2V4H20v16h-5.2L9.2 11.8V20H4V4Z"/>
+        </svg>
+      </a>
+
+      <!-- 제국 홈페이지는 이 페이지 머리에 쓴 왕관 문장을 그대로 쓴다 -->
+      <a class="link-btn" href="https://www.theholymaerchenempire.com/ko"
+         target="_blank" rel="noopener noreferrer"
+         data-i18n-title="linkHome" data-i18n-aria="linkHomeAria">
+        <svg class="crest-icon" viewBox="0 0 64 46" aria-hidden="true" focusable="false">
+          <path d="M5 34 L9 13 L20 24 L32 6 L44 24 L55 13 L59 34 Z"/>
+          <rect x="4" y="34" width="56" height="7" rx="1.5"/>
+          <circle cx="9"  cy="10" r="3"/>
+          <circle cx="32" cy="3.5" r="3.5"/>
+          <circle cx="55" cy="10" r="3"/>
+        </svg>
+      </a>
+
+    </nav>
+
+    <p class="footer-note" data-i18n="footerNote"></p>
+  </footer>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/units.js"></script>
+  <script src="js/convert.js"></script>
+  <script src="js/format.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>
