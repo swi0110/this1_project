@@ -182,6 +182,7 @@
     el.resultValue.classList.add('is-empty');
     el.equation.textContent = '';
     el.copyBtn.disabled = true;
+    el.glanceHeading.textContent = i18n.t('glanceHeading');
     el.glanceCaption.textContent = i18n.t('glanceEmpty');
     el.glanceBody.innerHTML = '';
   }
@@ -195,7 +196,6 @@
 
     el.resultSymbol.textContent = i18n.pick(target.symbol);
     el.resultReading.textContent = i18n.pick(target.name);
-    el.glanceUnit.textContent = i18n.pick(target.symbol);
 
     if (parsed.status !== 'ok') {
       clearResult(parsed.status === 'error' ? i18n.t(parsed.code) : '');
@@ -222,38 +222,49 @@
     el.equation.textContent =
       state.input.trim() + ' ' + i18n.pick(unit.symbol) + ' = ' + resultText + ' ' + i18n.pick(target.symbol);
 
-    renderGlance(parsed.value, dim, target);
+    renderGlance(parsed.value, unit, dim);
   }
 
-  /** 같은 숫자를 다른 기존 단위로 해석했을 때의 값 (F-05) */
-  function renderGlance(value, dim, target) {
-    el.glanceCaption.textContent = i18n.t('glanceCaption', state.input.trim());
+  /** 입력 수량을 차원 안의 모든 단위로 환산해 보여준다 (F-05) */
+  function renderGlance(value, fromUnit, dim) {
+    el.glanceHeading.textContent =
+      i18n.t('glanceHeadingWith', state.input.trim() + ' ' + i18n.pick(fromUnit.symbol));
+    el.glanceCaption.textContent = '';
 
     el.glanceBody.innerHTML = '';
-    convert.toTargetAll(value, dim, target).forEach(function (row) {
-      var isCurrent = row.unit.id === state.fromUnit;
-      var tr = document.createElement('tr');
-      tr.className = 'glance-row' + (isCurrent ? ' is-current' : '');
+    convert.toAllUnits(value, fromUnit, dim).forEach(function (row) {
+      var isCurrent = row.unit === fromUnit;
       var unitName = i18n.pick(row.unit.name);
-      tr.title = i18n.t('pickUnit', unitName);
+      var unitSymbol = i18n.pick(row.unit.symbol);
+      var label = unitName + ' <span class="glance-symbol">(' + unitSymbol + ')</span>';
+
+      /* 메르헨 단위는 입력 단위가 될 수 없다 — 변환이 기존 → 목표 단방향이라
+         이 행만 누를 수 없게 두고 버튼도 넣지 않는다 */
+      var pickable = row.unit !== dim.marchen;
+
+      var tr = document.createElement('tr');
+      tr.className = 'glance-row' + (isCurrent ? ' is-current' : '') + (pickable ? '' : ' is-static');
 
       /* 행에 role을 씌우면 표의 '단위명 ↔ 값' 대응이 사라진다. 셀 안 버튼이 초점·키보드를 맡고,
          버튼 클릭은 행까지 올라오므로 클릭 처리는 행 하나면 된다 */
       tr.innerHTML =
         '<td class="glance-name">' +
           '<span class="glance-marker">' + (isCurrent ? '▸' : '') + '</span>' +
-          '<button type="button" class="glance-pick"' +
-            ' aria-label="' + i18n.t('pickUnit', unitName) + '"' +
-            (isCurrent ? ' aria-current="true"' : '') + '>' +
-            unitName + ' <span class="glance-symbol">(' + i18n.pick(row.unit.symbol) + ')</span>' +
-          '</button>' +
+          (pickable
+            ? '<button type="button" class="glance-pick"' +
+                ' aria-label="' + i18n.t('pickUnit', unitName) + '"' +
+                (isCurrent ? ' aria-current="true"' : '') + '>' + label + '</button>'
+            : label) +
         '</td>' +
         '<td class="glance-value">' +
           format.formatNumber(row.value, state.decimals) +
-          ' <span class="glance-target">' + i18n.pick(target.symbol) + '</span>' +
+          ' <span class="glance-target">' + unitSymbol + '</span>' +
         '</td>';
 
-      tr.addEventListener('click', function () { selectUnit(row.unit.id); });
+      if (pickable) {
+        tr.title = i18n.t('pickUnit', unitName);
+        tr.addEventListener('click', function () { selectUnit(row.unit.id); });
+      }
       el.glanceBody.appendChild(tr);
     });
   }
@@ -363,7 +374,7 @@
     el.copyBtn = document.getElementById('copy-btn');
     el.equation = document.getElementById('equation');
     el.glanceCaption = document.getElementById('glance-caption');
-    el.glanceUnit = document.getElementById('glance-unit');
+    el.glanceHeading = document.getElementById('glance-heading');
     el.glanceBody = document.getElementById('glance-body');
     el.guideBody = document.getElementById('guide-body');
     el.decimals = document.getElementById('decimals');

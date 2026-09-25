@@ -37,8 +37,8 @@
       copied:           '{0} 복사됨',
       copyFailed:       '복사에 실패했습니다. 값을 직접 선택해 주세요.',
 
-      glanceHeading:    '입력 단위별 한눈에 보기',
-      glanceCaption:    '"{0}"을(를) 다른 단위로 본다면',
+      glanceHeading:    '다른 단위로 본다면',
+      glanceHeadingWith: '{0}를 다른 단위로 본다면',
       glanceEmpty:      '값을 입력하면 단위별 환산 결과가 표시됩니다.',
       pickUnit:         '{0}(으)로 입력 단위 바꾸기',
 
@@ -89,8 +89,8 @@
       copied:           'Copied {0}',
       copyFailed:       'Copy failed. Please select the value and copy it manually.',
 
-      glanceHeading:    'At a glance, by input unit',
-      glanceCaption:    'If "{0}" were given in another unit',
+      glanceHeading:    'In other units',
+      glanceHeadingWith: '{0} in other units',
       glanceEmpty:      'Enter a value to see the conversion for every unit.',
       pickUnit:         'Switch the input unit to {0}',
 

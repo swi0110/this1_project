@@ -125,6 +125,8 @@
     Object.freeze(dim.marchen);
     Object.freeze(dim.label);
     dim.targets = Object.freeze({ marchen: dim.marchen, imperial: imperial });
+    /* 한눈에 보기 표가 쓰는 목록. 이 앱의 주인공이라 메르헨 단위를 맨 앞에 둔다 */
+    dim.allUnits = Object.freeze([dim.marchen].concat(dim.sources));
     Object.freeze(dim);
   });
   Object.freeze(DIMENSIONS);

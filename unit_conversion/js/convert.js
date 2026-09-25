@@ -28,16 +28,27 @@
     if (fromUnit.dimension !== dimension.id) {
       throw new DimensionMismatchError(
         '"' + fromUnit.id + '"(' + fromUnit.dimension + ')은(는) ' +
-        dimension.label + ' 차원의 단위가 아닙니다.'
+        dimension.id + ' 차원의 단위가 아닙니다.'
       );
     }
     return toBase(value, fromUnit) / target.factor;
   }
 
-  /** 같은 숫자를 차원 내 모든 기존 단위로 해석한 값. {unit, value} 배열로 돌려준다 (F-05) */
-  function toTargetAll(value, dimension, target) {
-    return dimension.sources.map(function (unit) {
-      return { unit: unit, value: toTarget(value, unit, dimension, target) };
+  /**
+   * 입력 수량을 차원 안의 모든 단위로 환산한다. {unit, value} 배열 (F-05).
+   * 기준 단위를 한 번만 구하고 나눠 쓰므로 단위마다 다시 곱하지 않는다.
+   */
+  function toAllUnits(value, fromUnit, dimension) {
+    if (!fromUnit || !dimension) {
+      throw new DimensionMismatchError('단위 또는 차원이 빠졌습니다.');
+    }
+    if (fromUnit.dimension !== dimension.id) {
+      throw new DimensionMismatchError(
+        '"' + fromUnit.id + '"은(는) ' + dimension.id + ' 차원의 단위가 아닙니다.');
+    }
+    var base = toBase(value, fromUnit);
+    return dimension.allUnits.map(function (unit) {
+      return { unit: unit, value: base / unit.factor };
     });
   }
 
@@ -45,6 +56,6 @@
   global.MU.convert = {
     DimensionMismatchError: DimensionMismatchError,
     toTarget: toTarget,
-    toTargetAll: toTargetAll
+    toAllUnits: toAllUnits
   };
 })(typeof window !== 'undefined' ? window : this);

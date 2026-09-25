@@ -530,17 +530,6 @@ button:focus-visible {
   white-space: nowrap;
 }
 
-.panel-badge {
-  order: 3;
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--red);
-  border: 1px solid var(--gold-line);
-  border-radius: 999px;
-  padding: 2px 11px;
-  white-space: nowrap;
-}
-
 .panel-caption {
   margin: 0 0 8px;
   font-size: 12.5px;
@@ -572,6 +561,10 @@ table { width: 100%; border-collapse: collapse; }
 
 .glance-row { cursor: pointer; transition: background .1s ease; }
 .glance-row:hover { background: var(--surface-alt); }
+
+/* 메르헨 단위 행은 입력 단위로 고를 수 없어 누를 수 있는 척하지 않는다 */
+.glance-row.is-static { cursor: default; }
+.glance-row.is-static:hover { background: transparent; }
 
 .glance-row.is-current { background: color-mix(in srgb, var(--gold) 26%, transparent); }
 .glance-row.is-current .glance-value { color: var(--red-deep); font-weight: 700; }
