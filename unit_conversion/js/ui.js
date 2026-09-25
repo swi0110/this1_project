@@ -33,7 +33,7 @@
   }
 
   function currentUnit() {
-    return units.getSourceUnit(state.dimension, state.fromUnit);
+    return units.getUnit(state.dimension, state.fromUnit);
   }
 
   /** 지금 차원·단위계로 정해지는 출력 단위 */
@@ -48,7 +48,7 @@
       state.dimension = units.DIMENSIONS[0].id;
       dim = units.DIMENSIONS[0];
     }
-    if (!units.getSourceUnit(dim.id, state.fromUnit)) {
+    if (!units.getUnit(dim.id, state.fromUnit)) {
       state.fromUnit = dim.defaultFrom;
     }
     if (!dim.targets[state.system]) {
@@ -141,7 +141,7 @@
   function renderUnitSelect() {
     var dim = currentDimension();
     el.fromUnit.innerHTML = '';
-    dim.sources.forEach(function (unit) {
+    dim.allUnits.forEach(function (unit) {
       var opt = document.createElement('option');
       opt.value = unit.id;
       opt.textContent = i18n.pick(unit.name) + ' (' + i18n.pick(unit.symbol) + ')';
@@ -236,35 +236,27 @@
       var isCurrent = row.unit === fromUnit;
       var unitName = i18n.pick(row.unit.name);
       var unitSymbol = i18n.pick(row.unit.symbol);
-      var label = unitName + ' <span class="glance-symbol">(' + unitSymbol + ')</span>';
-
-      /* 메르헨 단위는 입력 단위가 될 수 없다 — 변환이 기존 → 목표 단방향이라
-         이 행만 누를 수 없게 두고 버튼도 넣지 않는다 */
-      var pickable = row.unit !== dim.marchen;
-
       var tr = document.createElement('tr');
-      tr.className = 'glance-row' + (isCurrent ? ' is-current' : '') + (pickable ? '' : ' is-static');
+      tr.className = 'glance-row' + (isCurrent ? ' is-current' : '');
+      tr.title = i18n.t('pickUnit', unitName);
 
       /* 행에 role을 씌우면 표의 '단위명 ↔ 값' 대응이 사라진다. 셀 안 버튼이 초점·키보드를 맡고,
          버튼 클릭은 행까지 올라오므로 클릭 처리는 행 하나면 된다 */
       tr.innerHTML =
         '<td class="glance-name">' +
           '<span class="glance-marker">' + (isCurrent ? '▸' : '') + '</span>' +
-          (pickable
-            ? '<button type="button" class="glance-pick"' +
-                ' aria-label="' + i18n.t('pickUnit', unitName) + '"' +
-                (isCurrent ? ' aria-current="true"' : '') + '>' + label + '</button>'
-            : label) +
+          '<button type="button" class="glance-pick"' +
+            ' aria-label="' + i18n.t('pickUnit', unitName) + '"' +
+            (isCurrent ? ' aria-current="true"' : '') + '>' +
+            unitName + ' <span class="glance-symbol">(' + unitSymbol + ')</span>' +
+          '</button>' +
         '</td>' +
         '<td class="glance-value">' +
           format.formatNumber(row.value, state.decimals) +
           ' <span class="glance-target">' + unitSymbol + '</span>' +
         '</td>';
 
-      if (pickable) {
-        tr.title = i18n.t('pickUnit', unitName);
-        tr.addEventListener('click', function () { selectUnit(row.unit.id); });
-      }
+      tr.addEventListener('click', function () { selectUnit(row.unit.id); });
       el.glanceBody.appendChild(tr);
     });
   }

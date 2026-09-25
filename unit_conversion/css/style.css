@@ -562,10 +562,6 @@ table { width: 100%; border-collapse: collapse; }
 .glance-row { cursor: pointer; transition: background .1s ease; }
 .glance-row:hover { background: var(--surface-alt); }
 
-/* 메르헨 단위 행은 입력 단위로 고를 수 없어 누를 수 있는 척하지 않는다 */
-.glance-row.is-static { cursor: default; }
-.glance-row.is-static:hover { background: transparent; }
-
 .glance-row.is-current { background: color-mix(in srgb, var(--gold) 26%, transparent); }
 .glance-row.is-current .glance-value { color: var(--red-deep); font-weight: 700; }
 .glance-row.is-current .glance-name { font-weight: 700; }

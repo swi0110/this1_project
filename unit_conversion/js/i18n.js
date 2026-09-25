@@ -50,7 +50,7 @@
       errNotNumber:     '유효한 숫자를 입력하세요.',
       errNotFinite:     '표현할 수 없는 값입니다.',
 
-      footerNote:       '메르헨 단위계 변환기 · v1.0 — 기존 단위 → 메르헨 · 야드파운드 단방향 변환',
+      footerNote:       '메르헨 단위계 변환기 · v1.0 — 메르헨 · 야드파운드 단위 변환',
 
       linkX:            'X',
       linkXAria:        'X (트위터) 바로가기',
@@ -102,7 +102,7 @@
       errNotNumber:     'Enter a valid number.',
       errNotFinite:     'This value cannot be represented.',
 
-      footerNote:       'Märchen Unit Converter · v1.0 — one-way conversion from existing units to Märchen · Imperial',
+      footerNote:       'Märchen Unit Converter · v1.0 — conversion into Märchen · Imperial units',
 
       linkX:            'X',
       linkXAria:        'Open X (Twitter)',

@@ -121,11 +121,14 @@
       throw new Error(dim.id + ' 차원의 야드파운드 단위 "' + dim.imperial + '"가 sources에 없습니다.');
     }
 
+    /* 메르헨 단위도 입력으로 고를 수 있으므로 차원 격리 검사가 읽을 dimension을 붙인다 */
+    dim.marchen.dimension = dim.id;
     Object.freeze(dim.marchen.name);
     Object.freeze(dim.marchen);
     Object.freeze(dim.label);
     dim.targets = Object.freeze({ marchen: dim.marchen, imperial: imperial });
-    /* 한눈에 보기 표가 쓰는 목록. 이 앱의 주인공이라 메르헨 단위를 맨 앞에 둔다 */
+    /* 입력 드롭다운과 환산표가 함께 쓰는 목록. 이 앱의 주인공이라 메르헨을 맨 앞에 둔다.
+       sources는 '기존 단위 카탈로그'로 남는다 — 야드파운드 목표를 여기서 고른다 */
     dim.allUnits = Object.freeze([dim.marchen].concat(dim.sources));
     Object.freeze(dim);
   });
@@ -138,11 +141,11 @@
     return DIMENSIONS.filter(function (d) { return d.id === dimensionId; })[0];
   }
 
-  /** 차원 안에서 입력 단위를 찾는다. 없으면 undefined */
-  function getSourceUnit(dimensionId, unitId) {
+  /** 차원 안에서 입력 단위를 찾는다. 메르헨 단위도 포함한다. 없으면 undefined */
+  function getUnit(dimensionId, unitId) {
     var dim = getDimension(dimensionId);
     if (!dim) return undefined;
-    return dim.sources.filter(function (u) { return u.id === unitId; })[0];
+    return dim.allUnits.filter(function (u) { return u.id === unitId; })[0];
   }
 
   /** 차원과 단위계로 출력 단위를 정한다. 모르는 단위계면 기본 단위계로 되돌린다 */
@@ -160,7 +163,7 @@
     DEFAULT_SYSTEM: DEFAULT_SYSTEM,
     DIMENSIONS: DIMENSIONS,
     getDimension: getDimension,
-    getSourceUnit: getSourceUnit,
+    getUnit: getUnit,
     getTarget: getTarget
   };
 })(typeof window !== 'undefined' ? window : this);
