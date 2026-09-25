@@ -225,6 +225,17 @@
     renderGlance(parsed.value, unit, dim);
   }
 
+  /**
+   * 행 값은 기준값을 더 작은 factor로 나누므로, 주 결과가 멀쩡해도 넘칠 수 있다
+   * (1e300 t → 주 결과는 2e302 tht지만 mg 행은 Infinity).
+   * formatNumber가 '—'를 돌려주는데, 왜 비었는지 알 수 있게 이유를 붙여 둔다.
+   */
+  function overflowAttr(value) {
+    if (isFinite(value)) return '';
+    var why = i18n.t('errNotFinite');
+    return ' title="' + why + '" aria-label="' + why + '"';
+  }
+
   /** 입력 수량을 차원 안의 모든 단위로 환산해 보여준다 (F-05) */
   function renderGlance(value, fromUnit, dim) {
     el.glanceHeading.textContent =
@@ -251,7 +262,7 @@
             unitName + ' <span class="glance-symbol">(' + unitSymbol + ')</span>' +
           '</button>' +
         '</td>' +
-        '<td class="glance-value">' +
+        '<td class="glance-value"' + overflowAttr(row.value) + '>' +
           format.formatNumber(row.value, state.decimals) +
           ' <span class="glance-target">' + unitSymbol + '</span>' +
         '</td>';

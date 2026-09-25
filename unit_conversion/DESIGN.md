@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 |---|---|
-| 문서 버전 | v2.7 |
+| 문서 버전 | v2.8 |
 | 작성일 | 2026-09-12 |
 | 대상 | 웹 기반 단위 변환 프로그램 |
 | 상태 | 확정 (구현 착수 가능) |
@@ -27,6 +27,7 @@
 | v2.5 | 자체 리뷰 지적 반영 — 척관법 기호 7종(尺·평·되·말·컵·근·관)을 {ko, en}으로 갈라 영문 화면에서 `1,234 geun = …`으로 읽히게 했고, 일부러 반대 언어로 다는 부제에 `lang` 속성을 붙였다. 옛 `name` 형태를 안내하던 README를 현재 구조로 다시 썼다. 테스트 55 → 59건 |
 | v2.6 | "입력 단위별 한눈에 보기"를 **"[입력 수량]를 다른 단위로 본다면"** 으로 바꿨다. 같은 숫자를 여러 단위로 해석하던 것에서, 입력 수량을 그 차원의 모든 단위(메르헨 포함)로 환산하는 표로 바뀐다 (§3.6). 엔진 API `toTargetAll` → `toAllUnits` |
 | v2.7 | **입력에도 메르헨 단위를 허용**. `dim.allUnits`가 입력 드롭다운이 되고 메르헨 단위에도 `dimension`을 붙여 차원 격리 검사를 통과시킨다. `getSourceUnit` → `getUnit`. 환산표의 '메르헨 행은 누를 수 없다' 제약과 `is-static` 스타일은 이유가 사라져 제거 |
+| v2.8 | 자체 리뷰 반영 — 환산표 행에도 유한성 검사를 넣어 넘친 칸에 이유를 붙인다. §8.1이 없는 `toMarchen`/`dimension.target`을 설명하던 것을 실제 `toTarget`으로 고치고, §8.2의 '항등 조합은 없다'는 거짓이 된 전제를 실측값과 함께 정정 |
 
 ---
 
@@ -448,20 +449,17 @@ const state = {
 ### 8.1 핵심 API (`js/convert.js`)
 
 ```js
-/** 기존 단위 값 → 기준 단위 값 (변환 1단계). 모듈 내부 전용 — 내보내지 않는다 */
+/** 입력 단위 값 → 기준 단위 값 (변환 1단계). 모듈 내부 전용 — 내보내지 않는다 */
 function toBase(value, unit) { return value * unit.factor; }
 
 /**
- * 기존 단위 → 해당 차원의 메르헨 단위로 변환
- * @param {number} value
- * @param {Unit} fromUnit      입력 단위 (기존 단위)
- * @param {Dimension} dimension
- * @returns {number} 메르헨 단위 값
- * @throws {DimensionMismatchError} fromUnit이 해당 차원 소속이 아닐 때
+ * 입력 단위 → 목표 단위. 목표는 호출하는 쪽이 units.getTarget(dimension, systemId)로
+ * 골라 넘긴다 — 엔진은 어느 단위계인지 알 필요가 없다.
+ * 차원이 맞지 않으면 DimensionMismatchError를 던진다.
  */
-export function toMarchen(value, fromUnit, dimension) {
+export function toTarget(value, fromUnit, dimension, target) {
   if (fromUnit.dimension !== dimension.id) throw new DimensionMismatchError();
-  return toBase(value, fromUnit) / dimension.target.factor;
+  return toBase(value, fromUnit) / target.factor;
 }
 
 /** 입력 수량을 차원 안의 모든 단위로 환산한다 (F-05) */
@@ -474,7 +472,13 @@ export function toAllUnits(value, fromUnit, dimension) {
 
 ### 8.2 정밀도 정책
 - 내부 계산은 항상 `number`(double) 원시값으로 유지하고, **표시 단계에서만 반올림**한다.
-- 기준 단위와 출력 단위가 일치하는 조합은 존재하지 않으므로 항등 예외 처리는 불필요하다.
+- **입력과 출력이 같은 단위인 조합이 존재한다** — `mt → mt`, 야드파운드 목표에서 `ft → ft`,
+  그리고 환산표에는 항상 항등 행이 들어 있다. `value * f / f`는 정확하지 않아 무작위
+  100만 값 중 11%가 1 ulp 어긋나지만(예: `0.0003241990797885235` → `…845`),
+  표시 자리수가 최대 8자리라 화면에는 드러나지 않는다. **자리수 선택지를 늘리거나
+  원값을 그대로 노출하려면 이 가정부터 다시 확인해야 한다.**
+- 환산표 행은 기준값을 더 작은 factor로 나누므로 주 결과보다 커진다. 주 결과가 유한해도
+  행 하나만 넘칠 수 있어, 그런 칸에는 `표현할 수 없는 값입니다`를 이유로 붙인다 (§10).
 - 포맷된 문자열 결과를 다시 계산 입력으로 재사용하지 않는다 (오차 누적 방지).
 - `dt`·`dtt` factor는 리터럴이 아니라 `MT_IN_CM`에서 유도해 정의 일관성을 유지한다 (§2.4).
 
