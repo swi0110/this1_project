@@ -127,8 +127,7 @@
     Object.freeze(dim.marchen);
     Object.freeze(dim.label);
     dim.targets = Object.freeze({ marchen: dim.marchen, imperial: imperial });
-    /* 입력 드롭다운과 환산표가 함께 쓰는 목록. 이 앱의 주인공이라 메르헨을 맨 앞에 둔다.
-       sources는 '기존 단위 카탈로그'로 남는다 — 야드파운드 목표를 여기서 고른다 */
+    /* 입력 드롭다운과 환산표가 쓰는 목록. 주인공이라 메르헨이 맨 앞이다 */
     dim.allUnits = Object.freeze([dim.marchen].concat(dim.sources));
     Object.freeze(dim);
   });
@@ -155,10 +154,6 @@
 
   global.MU = global.MU || {};
   global.MU.units = {
-    // 정의 일관성 테스트(T-15·T-16)가 읽는다
-    MT_IN_CM: MT_IN_CM,
-    DT_IN_CM2: DT_IN_CM2,
-    DTT_IN_L: DTT_IN_L,
     SYSTEMS: SYSTEMS,
     DEFAULT_SYSTEM: DEFAULT_SYSTEM,
     DIMENSIONS: DIMENSIONS,

@@ -225,11 +225,8 @@
     renderGlance(parsed.value, unit, dim);
   }
 
-  /**
-   * 행 값은 기준값을 더 작은 factor로 나누므로, 주 결과가 멀쩡해도 넘칠 수 있다
-   * (1e300 t → 주 결과는 2e302 tht지만 mg 행은 Infinity).
-   * formatNumber가 '—'를 돌려주는데, 왜 비었는지 알 수 있게 이유를 붙여 둔다.
-   */
+  /** 행 값은 더 작은 factor로 나눠 주 결과보다 크다 — 주 결과가 멀쩡해도 넘칠 수 있어
+      '—'만 남는 칸에 이유를 붙인다 (1e300 t → mg 행) */
   function overflowAttr(value) {
     if (isFinite(value)) return '';
     var why = i18n.t('errNotFinite');

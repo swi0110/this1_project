@@ -147,7 +147,6 @@
   global.MU.i18n = {
     DEFAULT_LANG: DEFAULT_LANG,
     LANGS: LANGS,
-    STRINGS: STRINGS,   // 문구 키 대조 테스트(T-45)가 읽는다
     setLang: setLang,
     t: t,
     pick: pick

@@ -22,8 +22,7 @@ start index.html
 ```
 
 받지 않고 바로 보려면 → **https://swi0110.github.io/this1_project/unit_conversion/**
-
-GitHub Pages가 `master`를 서빙하므로, 작업 브랜치의 변경은 머지한 뒤에 반영됩니다.
+(Pages가 `master`를 서빙하므로 작업 브랜치 변경은 머지 후 반영됩니다.)
 
 ## 화면
 

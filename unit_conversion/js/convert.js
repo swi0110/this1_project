@@ -36,7 +36,7 @@
 
   /**
    * 입력 수량을 차원 안의 모든 단위로 환산한다. {unit, value} 배열 (F-05).
-   * 기준 단위를 한 번만 구하고 나눠 쓰므로 단위마다 다시 곱하지 않는다.
+   * 기준 단위는 한 번만 구한다.
    */
   function toAllUnits(value, fromUnit, dimension) {
     if (!fromUnit || !dimension) {
